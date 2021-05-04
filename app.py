@@ -6,7 +6,8 @@ import routes
 import create_db
 import config
 
-
+cur = config.cur
+con = config.con
 app = config.app
 
 
