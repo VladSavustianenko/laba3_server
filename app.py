@@ -12,10 +12,9 @@ app = config.app
 
 
 if __name__ == '__main__':
-    print("Hello!!")
     create_db.create()
     app.run(debug="True")
 
 
-config.close_connection()
+# config.close_connection()
 
