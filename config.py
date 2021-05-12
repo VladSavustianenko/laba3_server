@@ -5,11 +5,11 @@ import os
 
 
 con = psycopg2.connect(
-    host=os.environ['HOST'],
-    database=os.environ['DATABASE'],
-    user=os.environ['USER'],
-    password=os.environ['PASSWORD'],
-    port=os.environ['PORT']
+    host=os.environ.get('HOST'),
+    database=os.environ.get('DATABASE'),
+    user=os.environ.get('USER'),
+    password=os.environ.get('PASSWORD'),
+    port=os.environ.get('PORT')
     # host='ec2-52-44-31-100.compute-1.amazonaws.com',
     # database='d1fqct9sb89al',
     # user='egsukzxripuiby',
