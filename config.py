@@ -3,13 +3,13 @@ from flask import Flask
 from flask_cors import CORS
 import os
 
-print(os.getenv("HOST"))
+print(os.environ['HOST'])
 con = psycopg2.connect(
-    host=os.getenv("HOST"),
-    database=os.getenv("DATABASE"),
-    user=os.getenv("USER"),
-    password=os.getenv("PASSWORD"),
-    port=os.getenv("PORT")
+    host=os.environ['HOST'],
+    database=os.environ['DATABASE'],
+    user=os.environ['USER'],
+    password=os.environ['PASSWORD'],
+    port=os.environ['PORT']
 )
 cur = con.cursor()
 target = 'https://chat-server-lab3.herokuapp.com/'
