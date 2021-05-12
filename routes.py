@@ -2,7 +2,12 @@ from flask import jsonify, request, make_response
 import time
 import os
 import config
-import services
+
+from modules.avatar import Avatar
+from modules.message import Message
+from modules.person import Person
+from modules.profile import Profile
+from modules.session import Session
 
 cur = config.cur
 con = config.con
@@ -18,7 +23,7 @@ def main():
 def login():
     if request.method == 'POST':
         data = request.json
-        user = services.login_check(data)
+        user = Session.login_check(data[0], data[1])
         return make_response(
             {'id': user[0], 'token': user[1]}
         )
@@ -30,22 +35,13 @@ def login():
 def signup():
     if request.method == 'POST':
         data = request.json
-        id = services.get_users_count() + 1
+        id = Person.get_users_count() + 1
         try:
-            is_available = services.unique_email_check(data[3])
+            is_available = Person.unique_email_check(data[3])
             if is_available:
-                cur.execute(
-                    f"INSERT INTO Person VALUES({id}, '{data[3]}', '{data[4]}')"
-                )
-                con.commit()
-                cur.execute(
-                    f"INSERT INTO Profile VALUES({id}, '{data[0]}', '{data[1]}', '{data[2]}')"
-                )
-                con.commit()
-                cur.execute(
-                    f"INSERT INTO Avatar(id) VALUES({id})"
-                )
-                con.commit()
+                Person.create(id, data[3], data[4])
+                Profile.create(id, data[0], data[1], data[2])
+                Avatar.create(id)
                 return make_response(
                     {'isAvailable': True}
                 )
@@ -63,15 +59,7 @@ def signup():
 def logout():
     if request.method == 'POST':
         token = request.json
-        try:
-            cur.execute(
-                f"DELETE FROM Session "
-                f"WHERE token = '{token}'"
-            )
-            con.commit()
-        except:
-            con.commit()
-            print("Couldn't delete token")
+        Session.logout(token)
     return jsonify('Log Out')
 
 
@@ -79,9 +67,9 @@ def logout():
 def person():
     if request.method == 'POST':
         token = request.json
-        id = services.token_check(token)
+        id = Session.token_check(token)
         if id:
-            profile = services.get_profile(id)
+            profile = Profile.get_profile(id)
             return make_response({
                 'id': profile[0],
                 'firstname': profile[1],
@@ -101,15 +89,15 @@ def person():
 def message():
     if request.method == 'POST':
         data = request.json
-        services.send_message(data)
-    return jsonify(services.get_messages())
+        Message.send_message(data[0], data[1], data[2], data[3])
+    return jsonify(Message.get_messages())
 
 
 @app.route('/edit', methods=['GET', 'POST'])
 def edit_profile():
     if request.method == 'POST':
         data = request.json
-        services.edit_profile(data)
+        Profile.edit_profile(data[0], data[1], data[2])
     return jsonify('Edit profile')
 
 
@@ -122,5 +110,5 @@ def edit_picture(id):
                                        f'{str(id)}.profilePictures.{str(current_time)}.{picture.filename}'))
 
         picture_url = f'{config.target}///static/{str(id)}.profilePictures.{str(current_time)}.{picture.filename}'
-        services.edit_profile_picture(id, picture_url)
+        Avatar.edit_profile_picture(id, picture_url)
     return jsonify('Edit profile picture')

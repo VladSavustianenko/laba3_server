@@ -3,7 +3,6 @@ from flask import Flask
 from flask_cors import CORS
 import proxy
 
-
 con = psycopg2.connect(
     host=proxy.HOST,
     database=proxy.DATABASE,
