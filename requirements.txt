@@ -8,3 +8,9 @@ MarkupSafe==1.1.1
 psycopg2==2.8.6
 six==1.15.0
 Werkzeug==1.0.1
+Flask-SQLAlchemy==2.5.1
+SQLAlchemy==1.4.15
+greenlet==1.1.0
+importlib-metadata==4.0.1
+typing-extensions==3.10.0.0
+zipp==3.4.1
