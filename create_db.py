@@ -1,7 +1,5 @@
 import config
 
-cur = config.cur
-con = config.con
 db = config.db
 
 

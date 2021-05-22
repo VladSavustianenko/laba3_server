@@ -3,14 +3,12 @@ import time
 import os
 import config
 
-from modules.avatar import Avatar
-from modules.message import Message
-from modules.person import Person
-from modules.profile import Profile
-from modules.session import Session
+from services.avatar import AvatarService as Avatar
+from services.message import MessageService as Message
+from services.person import PersonService as Person
+from services.profile import ProfileService as Profile
+from services.session import SessionService as Session
 
-cur = config.cur
-con = config.con
 app = config.app
 
 
@@ -50,7 +48,6 @@ def signup():
                     {'isAvailable': False}
                 )
         except:
-            con.commit()
             print("Failed add person")
     return jsonify('Sign up')
 
